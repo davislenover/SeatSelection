@@ -7,6 +7,9 @@
 
         /* Place UserID and Seat DropDown beside each-other */
         .form-group {
+            color: #333;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
             display: flex;
             align-items: center;
             margin-right: 10px;
@@ -149,8 +152,16 @@
 
     // Check if submit button was pressed (i.e., is the variable set now)
     if (isset($_POST["SubmitSeatSelection"])) {
-        // Call function to reserve seat with given arguments
-        reserveSeat($_POST["ID"],$_POST["seats"]);
+
+        // Check time
+        global $disableResponseUntil;
+        if (time() >= strtotime($disableResponseUntil)) {
+            // Call function to reserve seat with given arguments
+            reserveSeat($_POST["ID"],$_POST["seats"]);
+        } else {
+            echo("<p style=\"color: blue;\">Reservations are not currently accepted. They will be at " . $disableResponseUntil . " (current time: " . date("H:i:s",time()) . ")</p>");
+        }
+
         exit();
     }
 

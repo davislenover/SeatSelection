@@ -62,7 +62,7 @@
             }
 
             // Display successful reservation
-            echo("<p style=\"color: green;\">" . $seatToReserve  . " has been reserved! Time: " . date('H:i:s') . "</p>");
+            echo("<p style=\"color: green;\">" . $seatToReserve  . " has been reserved! Time: " . date("H:i:s",time()) . "-" . time() . "</p>");
 
         // Catch exception if connection fails
         } catch (Exception $exception) {
