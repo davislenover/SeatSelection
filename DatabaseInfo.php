@@ -5,5 +5,6 @@ $defaultUser = "seatUser";
 $password = "HpqWeHafLfiwWBkw9UmWReP^Vu";
 $database = "seatBase";
 $tableName = "seatData";
+// If false, upon user submission, userID will be checked if it already exists within database
 $allowMultipleResponses = false;
 ?>

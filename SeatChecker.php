@@ -3,6 +3,7 @@
     include "SQLComs.php";
     include "DatabaseInfo.php";
 
+    // Function to get open seats from SQL database
     function getAvailableSeats() {
 
         global $serverName, $password, $tableName, $database, $defaultUser;
@@ -18,6 +19,7 @@
 
     }
 
+    // Function to attempt to reserve a seat in SQL database
     function reserveSeat($userID, $seatToReserve) {
 
         global $serverName, $password, $tableName, $database, $allowMultipleResponses;
@@ -41,10 +43,8 @@
                 }
             }
 
-            $statement = $newSQLCon->invokeTransaction(getNotNullRowOfColumn($tableName,$seatToReserve));
-
-            // Check if any rows returned (this means that a row has already been reserved)
-            if ($statement->num_rows > 0) {
+            // Check if any rows returned with data for given seat (this means that the given seat has already been reserved)
+            if ($newSQLCon->doRowsExistForColumn($seatToReserve)) {
                 // Commit transaction (as it was only reading, not writing) and close connection
                 $newSQLCon->commitTransaction();
                 $newSQLCon->closeConnection();
@@ -54,7 +54,7 @@
             } else {
 
                 // If no rows returned, then reserve seat (i.e., add userID to specified seat column in a new row)
-                $statement = $newSQLCon->invokeTransaction(insertRow($tableName,$seatToReserve,$userID));
+                $newSQLCon->invokeTransaction(insertRow($tableName,$seatToReserve,$userID));
                 // Commit changes and close connection
                 $newSQLCon->commitTransaction();
                 $newSQLCon->closeConnection();
@@ -78,12 +78,21 @@
             } elseif ($exception->getCode() == 1000) {
 
                 // Echo red error message telling user that the seat could not be reserved
-                echo("<p style=\"color: red;\">Seat: " . $exception->getMessage() . ", is no longer available. Please select a different seat</p>");
+                echo("<p style=\"color: red;\">" . $exception->getMessage() . " is no longer available. Please select a different seat</p>");
 
             } elseif ($exception->getCode() == 1001) {
 
                 // Echo red error message telling user that the seat could not be reserved because they already reserved one
                 echo("<p style=\"color: red;\">The given UserID (" . $exception->getMessage() . "), has already reserved a seat</p>");
+
+            } elseif ($exception->getCode() == 1054) {
+                // 1054 indicates unknown column name (SQL)
+                echo("<p style=\"color: red;\">Invalid Seat. Please select a valid seat and try again</p>");
+
+            } elseif ($exception->getCode() == 1064) {
+
+                // 1064 is an SQL syntax error, however in this case, it means no more seats are available
+                echo("<p style=\"color: red;\">Seats are all gone! Sorry!</p>");
 
             } else {
 

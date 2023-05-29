@@ -82,6 +82,22 @@ class SQLComs
 
     }
 
+    // Function to test if rows with data exist for a given column
+    public function doRowsExistForColumn($columnName) {
+
+        // Get query result
+        $result = $this->conn->query(getNotNullRowOfColumn($this->tableName,$columnName));
+
+        // Check if rows exist
+        if ($result->num_rows > 0) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
+    // Function to get names of all columns which don't contain any data (as an array)
     public function getNullColumns() {
 
         // Get all inserted rows in table
@@ -119,10 +135,8 @@ class SQLComs
         return $returnArray;
 
     }
-    public function getColumnNames() {
-        return $this->columnNames;
-    }
 
+    // Transaction functions
     public function beginTransaction() {
         $this->conn->begin_transaction();
     }
@@ -138,6 +152,7 @@ class SQLComs
         $this->conn->rollback();
     }
 
+    // Function to close SQL connection
     public function closeConnection() {
         $this->conn->close();
     }

@@ -20,10 +20,9 @@
 
         include "SeatChecker.php";
 
+        // Get all available seats and display in dropdown
         foreach (getAvailableSeats() as $availableSeatName) {
-
             echo("<option value=\"$availableSeatName\">$availableSeatName</option>");
-
         }
 
         ?>
@@ -36,7 +35,9 @@
 
     <?php
 
+    // Check if submit button was pressed (i.e., is the variable set now)
     if (isset($_POST["SubmitSeatSelection"])) {
+        // Call function to reserve seat with given arguments
         reserveSeat($_POST["ID"],$_POST["seats"]);
     }
 
