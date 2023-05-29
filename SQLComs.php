@@ -63,4 +63,46 @@ class SQLComs
         return mysqli_query($this->conn,$query);
     }
 
+    public function getNullColumns() {
+
+        // Get all inserted rows in table
+        $result = mysqli_query($this->conn,selectAllRows($this->tableName));
+
+        // Setup array that tracks if a given column in a row is not null
+        $checkNullArray = array();
+        foreach ($this->columnNames as $name) {
+            // This is a key-value array (uses the name of the column as the index)
+            $checkNullArray[$name] = 0;
+        }
+
+        // Get all rows
+        while ($row = $result->fetch_assoc()) {
+            // Look through the column names
+            foreach ($this->columnNames as $name) {
+                // Check if in the specific row, the given column is not null
+                if (!is_null($row[$name])) {
+                    // If it's not, increment specific index in tracker array by 1
+                    $checkNullArray[$name] += 1;
+                }
+            }
+        }
+
+        // Now just check which columns have a value of 0 in the tracker array to return
+        // If they have a value of 0, it means that the given column was null for every row and thus, is available
+        $returnArray = array();
+        foreach ($this->columnNames as $name) {
+            if ($checkNullArray[$name] == 0) {
+                $returnArray[] = $name;
+            }
+        }
+
+        return $returnArray;
+
+    }
+
+
+    public function getColumnNames() {
+        return $this->columnNames;
+    }
+
 }
