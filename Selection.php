@@ -20,9 +20,17 @@
 
         include "SeatChecker.php";
 
-        // Get all available seats and display in dropdown
-        foreach (getAvailableSeats() as $availableSeatName) {
-            echo("<option value=\"$availableSeatName\">$availableSeatName</option>");
+        // Get all available seats
+        $availableSeats = getAvailableSeats();
+
+        if (count($availableSeats) != 0) {
+            // Get all available seats and display in dropdown
+            foreach ($availableSeats as $availableSeatName) {
+                echo("<option value=\"$availableSeatName\">$availableSeatName</option>");
+            }
+        } else {
+            // If no available seats exist, display empty option
+            echo("<option value=\"\"></option>");
         }
 
         ?>
@@ -31,7 +39,17 @@
 
     <br>
 
-    <input type="submit" value="Reserve Seat" name="SubmitSeatSelection">
+    <?php
+
+        // If no available seats exist, remove reserve button and replace with text
+        if (count($availableSeats) != 0) {
+            echo("<input type=\"submit\" value=\"Reserve Seat\" name=\"SubmitSeatSelection\">");
+        } else {
+            echo("<p style=\"color: red;\">Seats are now all gone!</p>");
+        }
+    
+    ?>
+
 
     <?php
 
