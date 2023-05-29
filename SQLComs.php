@@ -26,13 +26,12 @@ class SQLComs
 
         // No $ on subsequent names, think of this as "this.conn.connect_error"
         if ($this->conn->connect_error) {
+            $this->conn->close();
             throw new mysqli_sql_exception("Connection to database failed");
         }
 
         // Get Table Column Names (setup)
         $this->getColumns();
-
-        echo "Connection Successful";
     }
 
     // Function to get column names within the table
@@ -61,6 +60,26 @@ class SQLComs
     private function sendQuery($query) {
         // Get the connection and execute the query
         return mysqli_query($this->conn,$query);
+    }
+
+    public function doesIDExistInRow($userID) {
+
+        // Get all inserted rows in table
+        $result = mysqli_query($this->conn,selectAllRows($this->tableName));
+
+        // Loop through each row
+        while($row = $result->fetch_assoc()) {
+            // Check if the data stored within the column matches the given userID
+            foreach($this->columnNames as $name) {
+                if ($row[$name] == $userID) {
+                    return true;
+
+                }
+            }
+        }
+
+        return false;
+
     }
 
     public function getNullColumns() {
@@ -92,6 +111,7 @@ class SQLComs
         $returnArray = array();
         foreach ($this->columnNames as $name) {
             if ($checkNullArray[$name] == 0) {
+                // Same idea as array_push
                 $returnArray[] = $name;
             }
         }
@@ -99,10 +119,27 @@ class SQLComs
         return $returnArray;
 
     }
-
-
     public function getColumnNames() {
         return $this->columnNames;
+    }
+
+    public function beginTransaction() {
+        $this->conn->begin_transaction();
+    }
+
+    public function invokeTransaction($statementQuery) {
+        return $this->conn->query($statementQuery);
+    }
+
+    public function commitTransaction() {
+        $this->conn->commit();
+    }
+    public function rollbackTransaction() {
+        $this->conn->rollback();
+    }
+
+    public function closeConnection() {
+        $this->conn->close();
     }
 
 }

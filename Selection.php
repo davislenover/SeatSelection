@@ -6,7 +6,7 @@
 </head>
 <body>
 
-<form action="ProcessInput.php" method="post">
+<form action="" method="post">
 
     <label for="ID">UserID</label>
     <input type="number" id="ID" name="ID">
@@ -32,7 +32,15 @@
 
     <br>
 
-    <input type="submit" value="Reserve Seat">
+    <input type="submit" value="Reserve Seat" name="SubmitSeatSelection">
+
+    <?php
+
+    if (isset($_POST["SubmitSeatSelection"])) {
+        reserveSeat($_POST["ID"],$_POST["seats"]);
+    }
+
+    ?>
 
 </form>
 
