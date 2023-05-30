@@ -22,12 +22,12 @@
     // Function to attempt to reserve a seat in SQL database
     function reserveSeat($userID, $seatToReserve) {
 
-        global $serverName, $password, $tableName, $database, $allowMultipleResponses;
+        global $serverName, $password, $tableName, $database, $allowMultipleResponses, $userPrefix;
 
         try {
 
             // Attempt to get connection
-            $newSQLCon = new SQLComs($serverName,$userID,$password,$database,$tableName);
+            $newSQLCon = new SQLComs($serverName,$userPrefix.$userID,$password,$database,$tableName);
 
             // Prepare transaction (a transaction operates on a temporary database)
             $newSQLCon->beginTransaction();

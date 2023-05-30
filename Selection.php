@@ -147,22 +147,44 @@
     
     ?>
 
+    <script>
+        const button = document.getElementsByName("SubmitSeatSelection")[0];
+
+        function disableSubmitButton() {
+            button.value = "Processing...";
+            button.disabled = true;
+        }
+        function enableSubmitButton() {
+            button.value = "Reserve Seat";
+            button.disabled = false;
+        }
+    </script>
+
 
     <?php
 
-    // Check if submit button was pressed (i.e., is the variable set now)
-    if (isset($_POST["SubmitSeatSelection"])) {
+        // Check if submit button was pressed (i.e., is the variable set now)
+        if (isset($_POST["SubmitSeatSelection"])) {
+            // Call JS to disable submit button
+            echo("<script type=\"text/javascript\">disableSubmitButton();</script>");
+            // Check if accepting reservations
+            global $acceptingReservations;
+            if ($acceptingReservations) {
+                // Check time
+                global $disableResponseUntil;
+                if (time() >= strtotime($disableResponseUntil)) {
+                    // Call function to reserve seat with given arguments
+                    reserveSeat($_POST["ID"],$_POST["seats"]);
+                } else {
+                    echo("<p style=\"color: blue;\">Reservations are not currently accepted. They will be at " . $disableResponseUntil . " (current time: " . date("H:i:s",time()) . ")</p>");
+                }
+            } else {
+                echo("<p style=\"color: blue;\">Reservations are not currently being accepted at this time</p>");
+            }
 
-        // Check time
-        global $disableResponseUntil;
-        if (time() >= strtotime($disableResponseUntil)) {
-            // Call function to reserve seat with given arguments
-            reserveSeat($_POST["ID"],$_POST["seats"]);
-        } else {
-            echo("<p style=\"color: blue;\">Reservations are not currently accepted. They will be at " . $disableResponseUntil . " (current time: " . date("H:i:s",time()) . ")</p>");
-        }
-
-        exit();
+            // Re-enable button
+            echo("<script type=\"text/javascript\">enableSubmitButton();</script>");
+            exit();
     }
 
     ?>
