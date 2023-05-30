@@ -142,7 +142,7 @@ class SQLComs
     }
 
     public function invokeTransaction($statementQuery) {
-        return $this->conn->query($statementQuery);
+        $this->conn->query($statementQuery);
     }
 
     public function commitTransaction() {

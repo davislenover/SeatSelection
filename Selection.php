@@ -174,8 +174,11 @@
                 // Check time
                 global $disableResponseUntil;
                 if (time() >= strtotime($disableResponseUntil)) {
-                    // Call function to reserve seat with given arguments
-                    reserveSeat($_POST["ID"],$_POST["seats"]);
+                    // Check that at least one seat was determined to be available (they may not actually be available on submission)
+                    if (count($availableSeats) != 0) {
+                        // Call function to reserve seat with given arguments
+                        reserveSeat($_POST["ID"],$_POST["seats"]);
+                    }
                 } else {
                     echo("<p style=\"color: blue;\">Reservations are not currently accepted. They will be at " . $disableResponseUntil . " (current time: " . date("H:i:s",time()) . ")</p>");
                 }
