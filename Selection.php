@@ -161,16 +161,6 @@
                 }
             }, 10); // delay before invoking
         }
-        function enableSubmitButton() {
-            setTimeout(function() {
-                try {
-                    button.value = "Reserve Seat";
-                    button.disabled = false;
-                } catch (error) {
-                    // Do nothing on error
-                }
-            }, 10); // delay before invoking
-        }
     </script>
 
 
@@ -193,8 +183,6 @@
                 echo("<p style=\"color: blue;\">Reservations are not currently being accepted at this time</p>");
             }
 
-            // Re-enable button
-            echo("<script type=\"text/javascript\">enableSubmitButton();</script>");
             exit();
     }
 
