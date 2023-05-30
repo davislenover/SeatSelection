@@ -140,7 +140,7 @@
 
         // If no available seats exist, remove reserve button and replace with text
         if (count($availableSeats) != 0) {
-            echo("<input type=\"submit\" value=\"Reserve Seat\" name=\"SubmitSeatSelection\">");
+            echo("<input type=\"submit\" value=\"Reserve Seat\" name=\"SubmitSeatSelection\" onclick='disableSubmitButton()'>");
         } else {
             echo("<p style=\"color: red;\">Seats are now all gone!</p>");
         }
@@ -148,15 +148,20 @@
     ?>
 
     <script>
+        // Visually update button
         const button = document.getElementsByName("SubmitSeatSelection")[0];
-
         function disableSubmitButton() {
-            button.value = "Processing...";
-            button.disabled = true;
+            setTimeout(function () {
+                button.value = "Processing...";
+                button.disabled = true;
+                button.style.backgroundColor = "gray";
+            }, 10); // delay before invoking
         }
         function enableSubmitButton() {
-            button.value = "Reserve Seat";
-            button.disabled = false;
+            setTimeout(function() {
+                button.value = "Reserve Seat";
+                button.disabled = false;
+            }, 1000); // delay before invoking
         }
     </script>
 
@@ -165,8 +170,6 @@
 
         // Check if submit button was pressed (i.e., is the variable set now)
         if (isset($_POST["SubmitSeatSelection"])) {
-            // Call JS to disable submit button
-            echo("<script type=\"text/javascript\">disableSubmitButton();</script>");
             // Check if accepting reservations
             global $acceptingReservations;
             if ($acceptingReservations) {
