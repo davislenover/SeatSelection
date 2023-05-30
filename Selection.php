@@ -103,7 +103,7 @@
 
 <img src="images/seatReference.jpg" alt="Seat reference guide" />
 
-<form action="" method="post">
+<form action="" onsubmit='disableSubmitButton()' method="post">
 
     <div class="form-group">
 
@@ -140,7 +140,7 @@
 
         // If no available seats exist, remove reserve button and replace with text
         if (count($availableSeats) != 0) {
-            echo("<input type=\"submit\" value=\"Reserve Seat\" name=\"SubmitSeatSelection\" onclick='disableSubmitButton()'>");
+            echo("<input type=\"submit\" value=\"Reserve Seat\" name=\"SubmitSeatSelection\">");
         } else {
             echo("<p style=\"color: red;\">Seats are now all gone!</p>");
         }
@@ -148,20 +148,28 @@
     ?>
 
     <script>
-        // Visually update button
+        // Visually update button, functions below are cosmetic
         const button = document.getElementsByName("SubmitSeatSelection")[0];
         function disableSubmitButton() {
             setTimeout(function () {
-                button.value = "Processing...";
-                button.disabled = true;
-                button.style.backgroundColor = "gray";
+                try {
+                    button.value = "Processing...";
+                    button.disabled = true;
+                    button.style.backgroundColor = "gray";
+                } catch (error) {
+                    // Do nothing on error
+                }
             }, 10); // delay before invoking
         }
         function enableSubmitButton() {
             setTimeout(function() {
-                button.value = "Reserve Seat";
-                button.disabled = false;
-            }, 1000); // delay before invoking
+                try {
+                    button.value = "Reserve Seat";
+                    button.disabled = false;
+                } catch (error) {
+                    // Do nothing on error
+                }
+            }, 10); // delay before invoking
         }
     </script>
 
