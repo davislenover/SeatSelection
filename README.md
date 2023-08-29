@@ -35,6 +35,7 @@ A web-based multi-purpose seat selection tool. The platform can be adpated such 
 1. Within the ```DatabaseInfo.php``` file *(within the ```public_html``` directory)* change ```$disableResponseUntil``` to a specified ```HH:MM:SS```
 2. Save the file, this will update the live site to not accept responses until the given time
 - Note that the specified time is based on the server time hosting your website
+- IF ANOTHER ROUND OF RESERVATIONS ARE NEEDED, IT IS RECOMMENDED TO SET THIS TIME BEFORE CLEARING RESERVATION DATA
 ## Disable/Enable Service At Will
 - In case one might want to outright disable selections
 1. Within the ```DatabaseInfo.php``` file *(within the ```public_html``` directory)*, change ```$acceptingReservations``` to a boolean value
@@ -45,3 +46,7 @@ A web-based multi-purpose seat selection tool. The platform can be adpated such 
 1. Within the ```DatabaseInfo.php``` file *(within the ```public_html``` directory)*, change ```$allowMultipleResponses``` to a boolean value
 - ```true``` - enables multiple reservations
 - ```false``` - disables multiple reservations
+
+## General Notes for Admins
+- To view reservations, select your created table *(under the given database)* in the left containner in phpMyAdmin, select the Browse tab in the main window.
+- To clear seat reservations, select your created table *(under the given database)* in the left containner in phpMyAdmin, then select the SQL tab in the main window. From here, run the following query: ```DELETE FROM <table name here, exclude ">">;``` This will clear all reservations. *NOTE: You can also run all kinds of queries from here!*
